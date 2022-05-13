@@ -5,3 +5,10 @@ class User(BaseModel):
     name: str
     lastName: str
     born: int 
+
+class Instrumentos(BaseModel):
+    
+    Marca: str
+    Modelo: str
+    Precio: int
+    Stock: int          

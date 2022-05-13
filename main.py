@@ -1,9 +1,12 @@
+import uuid
 from conexion import db
 from fastapi import FastAPI, HTTPException
-from models import User
+from models import User, Instrumentos
+import uuid
 
 # llamamos a la coleccion users de la db(instancia de firestore)
 users = db.collection(u'users')
+listInstrument = db.collection(u'Instrumentos')
 
 # creamos una instancia de FastAPI para tener acceso a las rutas 
 app = FastAPI()
@@ -58,3 +61,18 @@ async def modUser(id, name):
         u'nombre': name
     })
     return {'status' : 200} 
+
+@app.post("/addInstrumentos")
+async def addInstrumentos(instrumentos: Instrumentos): #pasamos por parametro el modelo de usuario {name, lastName, born}
+    # creamos una instancia de la lista de usuarios y añadimos el id como llave del diccionario
+    instrumentAdd = listInstrument.document(f'{uuid.uuid4()}') 
+    # agregamos los parametros internos del diccionario y enviamos los cambios
+    instrumentAdd.set({
+        # a la izquierda vemos el nombre del campo en la base de datos
+        
+        u'marca': instrumentos.Marca, # a la derecha vemos el dato que le pasamos por parametro del POST
+        u'modelo': instrumentos.Modelo,
+        u'precio': instrumentos.Precio,
+        u'stock': instrumentos.Stock
+    })
+    return {'status' : 200} #retornamos una mensaje de exito
